@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 
 export default function Home() {
   return (
@@ -10,10 +10,28 @@ export default function Home() {
         <span>SIMPLIFY</span>
       </div>
 
-      <div className="flex flex-col gap-4">
-        <Link href="/signup">Sign up</Link>
-        <Link href="/login">Log in</Link>
-      </div>
+      <form action="" className="w-full flex flex-col justify-start">
+        <div className="flex flex-row gap-4">
+          <label htmlFor="input-language" className="sr-only">Input language</label>
+          <select name="input-language" id="input-language">
+            <option value="sv">Svenska</option>
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+
+          <label htmlFor="output-language" className="sr-only">Output language</label>
+          <select name="output-language" id="output-language">
+            <option value="en">English</option>
+            <option value="sv">Svenska</option>
+            <option value="es">Español</option>
+          </select>
+        </div>
+
+        <label htmlFor="input" className="sr-only">Input</label>
+        <textarea name="input" id="input"></textarea>
+
+        <button type="submit" className="ml-auto">Submit</button>
+      </form>
     </main>
   );
 }

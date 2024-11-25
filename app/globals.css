@@ -6,10 +6,28 @@ body {
   @apply font-spaceMono bg-offWhite text-dark p-6 min-h-screen flex flex-col;
 }
 
+button {
+  @apply bg-warmYellow w-fit px-6 py-4 uppercase rounded-full drop-shadow;
+}
+
 main {
-  @apply text-center mx-auto pt-12 grow;
+  @apply text-center mx-auto pt-12 grow w-full;
 }
 
 h2 {
   @apply font-sofiaPro text-6xl mb-4;
+}
+
+form textarea,
+form select {
+  @apply bg-light text-dark border border-dark rounded-lg drop-shadow mb-4 p-2;
+}
+
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  @apply w-full min-h-32;
+}
+
+select {
+  @apply w-full appearance-none;
 }

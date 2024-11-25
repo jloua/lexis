@@ -34,16 +34,24 @@ export default function RootLayout({
 			<body
 				className={`${spaceMono.variable} ${sofiaPro.variable} antialiased`}
 			>
-				<div className="text-darkBlue">
-					<h1>lexis</h1>
-					<p className="text-[8px]">
-						Simplify language,
-						<br />
-						amplify understanding
-					</p>
+				<div className="flex flex-row justify-between">
+					<div className="text-darkBlue">
+						<h1>lexis</h1>
+						<p className="text-[8px]">
+							Simplify language,
+							<br />
+							amplify understanding
+						</p>
+					</div>
+
+					<div className="flex flex-row gap-2">
+						<Link href="/signup">Sign up</Link>
+						<Link href="/login">Log in</Link>
+					</div>
 				</div>
+
 				{children}
-				<nav className="flex flex-row justify-between">
+				<nav className="flex flex-row justify-between pb-4">
 					<Link href="/">Learn</Link>
 					<Link href="/practice">Practice</Link>
 					<Link href="/profile">Profile</Link>
