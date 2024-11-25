@@ -9,8 +9,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        darkBlue: "#004A93",
+        warmYellow: "#F2C166",
+        orange: "#F28705",
+        light: "#F2EEEE",
+        offWhite: "#F2ECE6",
+        dark: "#2A2A2A",
+      },
+      fontFamily: {
+        sofiaPro: "var(--font-sofia-pro)",
+        spaceMono: "var(--font-space-mono)",
       },
     },
   },
