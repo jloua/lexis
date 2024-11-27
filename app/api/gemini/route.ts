@@ -1,97 +1,48 @@
 import { NextResponse } from "next/server";
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
 import * as dotenv from "dotenv";
+import { simplifyText, translateText } from "@/app/services/gemini";
+import { GeminiPostReqSchema } from "@/app/types/gemini";
 
 dotenv.config();
 
-export async function GET() {
-  try {
-    const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-1.5-pro",
-      temperature: 0.3,
-      maxRetries: 2,
-    });
-
-    const prompt = ChatPromptTemplate.fromMessages([
-      [
-        "system",
-        "You are a helpful assistant that translates {input_language} to {output_language}.",
-      ],
-      ["human", "{input}"],
-    ]);
-
-    const chain = prompt.pipe(llm);
-    const aiResponse = await chain.invoke({
-      input_language: "sv",
-      output_language: "en",
-      input: "Dags att återgå till arbetet",
-    });
-
-    return NextResponse.json({ message: aiResponse });
-  } catch (error) {
-    if (error instanceof Error)
-      return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-}
-
 export async function POST(request: Request) {
   try {
-    const llm = new ChatGoogleGenerativeAI({
-      model: "gemini-1.5-pro",
-      temperature: 0.3,
-      maxRetries: 2,
-    });
+    const json = await request.json();
+    const validatedRequest = GeminiPostReqSchema.safeParse(json);
 
-    const userInput = await request.json();
-
-    if (userInput.type === "translation") {
-      const { input_language, output_language, input } = userInput;
-      const prompt = ChatPromptTemplate.fromMessages([
-        [
-          "system",
-          `You are a helpful assistant that translates text from ${input_language} to ${output_language}. Translate the following text directly.`,
-        ],
-        ["human", input],
-      ]);
-
-      const chain = prompt.pipe(llm);
-
-      const aiResponse = await chain.invoke({
-        input_language,
-        output_language,
-        input,
-      });
-
-      return NextResponse.json({ message: aiResponse });
+    if (!validatedRequest.success) {
+      return NextResponse.json(
+        { error: "Invalid input", details: validatedRequest.error.errors },
+        { status: 400 }
+      );
     }
 
-    if (userInput.type === "simplify") {
-      const { input_language, input } = userInput;
-      const prompt = ChatPromptTemplate.fromMessages([
-        [
-          "system",
-          `You are a helpful assistant that simplifies a text in ${input_language}. It could be to help someone with little knowledge in ${input_language} or someone with reading difficulties. Rephrase the following text directly.`,
-        ],
-        ["human", input],
-      ]);
+    const {
+      type,
+      input_language,
+      output_language = "en",
+      input,
+    } = validatedRequest.data;
 
-      const chain = prompt.pipe(llm);
+    const result =
+      type === "translation"
+        ? await translateText(input_language, output_language, input)
+        : type === "simplify"
+        ? await simplifyText(input_language, input)
+        : null;
 
-      const aiResponse = await chain.invoke({
-        input_language,
-        input,
-      });
-
-      return NextResponse.json({ message: aiResponse });
+    if (!result) {
+      throw new Error("Invalid type");
     }
+
+    return NextResponse.json({ message: result });
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     return NextResponse.json(
-      { error: "Error requesting translation" },
+      { error: "Error requesting API" },
       { status: 500 }
     );
   }
