@@ -1,21 +1,21 @@
 "use client";
 
-import axios from "axios";
 import { useState } from "react";
-import { GeminiPostReqType, GeminiResponse } from "../types/gemini";
+import { GeminiPostReqType } from "../types/gemini";
+import { postGeminiRequest } from "../services/gemini";
 
 const useGeminiAPI = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
 
-  const postGeminiRequest = async (userInput: GeminiPostReqType) => {
+  const postGeminiRequestHandler = async (userInput: GeminiPostReqType) => {
     setLoading(true);
     setError(null);
 
     try {
-      const res = await axios.post<GeminiResponse>("../api/gemini", userInput);
-      setResult(res.data.message.content);
+      const res = await postGeminiRequest(userInput);
+      setResult(res);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -26,7 +26,12 @@ const useGeminiAPI = () => {
     setLoading(false);
   };
 
-  return { error, loading, result, postGeminiRequest };
+  return {
+    error,
+    loading,
+    result,
+    postGeminiRequest: postGeminiRequestHandler,
+  };
 };
 
 export default useGeminiAPI;

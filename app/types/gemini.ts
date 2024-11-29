@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const GeminiPostReqSchema = z.object({
-  type: z.enum(["translation", "simplify"]),
+  type: z.enum(["translate", "simplify"]),
   input_language: z.string(),
   output_language: z.string().optional(),
   input: z.string(),

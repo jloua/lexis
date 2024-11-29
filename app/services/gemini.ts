@@ -1,10 +1,15 @@
 import { AIMessageChunk } from "@langchain/core/messages";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
-import { GeminiPostResultSchema } from "../types/gemini";
+import {
+  GeminiPostReqType,
+  GeminiPostResultSchema,
+  GeminiResponse,
+} from "../types/gemini";
+import axios from "axios";
 
 const llm = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-pro",
+  model: "gemini-1.5-flash",
   temperature: 0.3,
   maxRetries: 2,
 });
@@ -58,4 +63,16 @@ export const translateText = async (
   });
 
   return validateResponse(response);
+};
+
+export const postGeminiRequest = async (data: GeminiPostReqType) => {
+  try {
+    const res = await axios.post<GeminiResponse>("../api/gemini", data);
+    return res.data.message.content;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("Failed to post to Gemini");
+  }
 };

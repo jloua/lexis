@@ -4,7 +4,7 @@ import useGeminiAPI from "../hooks/useGeminiAPI";
 
 
 const APIButton = () => {
-    const userInput = { type: "translation" as const, input_language: "en", output_language: "sv", input: "You can also use variant modifiers to target media queries like responsive breakpoints, dark mode, prefers-reduced-motion, and more." };
+    const userInput = { type: "translate" as const, input_language: "zh", output_language: "sv", input: "您还可以使用变体修饰符来定位媒体查询，例如响应式断点、暗模式、偏好减少运动等" };
     const userInputSimplify = { type: "simplify" as const, input_language: "sv", input: "Tankekonflikt" };
     const { loading, result, error, postGeminiRequest } = useGeminiAPI();
 

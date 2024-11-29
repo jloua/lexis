@@ -25,7 +25,7 @@ export async function POST(request: Request) {
     } = validatedRequest.data;
 
     const result =
-      type === "translation"
+      type === "translate"
         ? await translateText(input_language, output_language, input)
         : type === "simplify"
         ? await simplifyText(input_language, input)
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ message: result });
   } catch (error) {
+    console.error(error);
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
