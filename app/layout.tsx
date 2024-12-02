@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Space_Mono } from 'next/font/google'
 import Link from "next/link";
 import "./globals.css";
+import AuthContextProvider from "./contexts/AuthContextProvider";
 
 const sofiaPro = localFont({
 	src: "./fonts/SofiaPro.otf",
@@ -34,28 +35,32 @@ export default function RootLayout({
 			<body
 				className={`${spaceMono.variable} ${sofiaPro.variable} antialiased`}
 			>
-				<div className="flex flex-row justify-between">
-					<div className="text-darkBlue">
-						<h1>lexis</h1>
-						<p className="text-[8px]">
-							Simplify language,
-							<br />
-							amplify understanding
-						</p>
+				<AuthContextProvider>
+					<div className="flex flex-row justify-between">
+						<Link href="/">
+							<div className="text-darkBlue">
+								<h1>lexis</h1>
+								<p className="text-[8px]">
+									Simplify language,
+									<br />
+									amplify understanding
+								</p>
+							</div>
+
+						</Link>
+						<div className="flex flex-row gap-2">
+							<Link href="/signup">Sign up</Link>
+							<Link href="/login">Log in</Link>
+						</div>
 					</div>
 
-					<div className="flex flex-row gap-2">
-						<Link href="/signup">Sign up</Link>
-						<Link href="/login">Log in</Link>
-					</div>
-				</div>
-
-				{children}
-				<nav className="flex flex-row justify-between pb-4">
-					<Link href="/">Learn</Link>
-					<Link href="/practice">Practice</Link>
-					<Link href="/profile">Profile</Link>
-				</nav>
+					{children}
+					<nav className="flex flex-row justify-between pb-4">
+						<Link href="/">Learn</Link>
+						<Link href="/practice">Practice</Link>
+						<Link href="/profile">Profile</Link>
+					</nav>
+				</AuthContextProvider>
 			</body>
 		</html>
 	);
