@@ -5,13 +5,10 @@ import {
   User,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  updateEmail,
-  updatePassword,
-  updateProfile,
 } from "firebase/auth";
-import { AuthType } from "../types/user";
+import { AuthType, UpdateProfileFormFieldsType } from "../types/user";
 import { auth } from "../services/firebase/config"
-import { logoutFunc, signInWithGoogle, signupWithEmail } from "@/app/services/firebase/userServices"
+import { logoutFunc, signInWithGoogle, signupWithEmail, updateUserProfileFunc } from "@/app/services/firebase/userServices"
 
 export const AuthContext = createContext<AuthType | null>(null);
 
@@ -49,39 +46,13 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return true;
   };
 
-  const setEmail = (email: string) => {
+  const updateUserProfile = (data: UpdateProfileFormFieldsType) => {
     if (!currentUser) {
       throw new Error("Unauthorised, you are not logged in");
     }
 
-    return updateEmail(currentUser, email);
-  };
-
-  const setPassword = (password: string) => {
-    if (!currentUser) {
-      throw new Error("Unauthorised, you are not logged in");
-    }
-
-    return updatePassword(currentUser, password);
-  };
-
-  const setDisplayName = (name: string) => {
-    if (!currentUser) {
-      throw new Error("Unauthorised, you are not logged in");
-    }
-
-    return updateProfile(currentUser, {
-      displayName: name,
-    });
-  };
-
-  const setPhotoUrl = (url: string) => {
-    if (!currentUser) {
-      throw new Error("Unauthorised, you are not logged in");
-    }
-
-    return updateProfile(currentUser, { photoURL: url });
-  };
+    return updateUserProfileFunc(currentUser, data);
+  }
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -109,10 +80,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     login,
     logout,
     reloadUser,
-    setEmail,
-    setDisplayName,
-    setPassword,
-    setPhotoUrl,
+    updateUserProfile,
     currentUser,
     userEmail,
     userName,

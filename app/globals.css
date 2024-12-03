@@ -30,9 +30,12 @@ h3 {
 
 form textarea,
 form select,
-form input[type="email"],
-form input[type="password"] {
+form input:not([type="radio"]) {
   @apply bg-light text-dark border border-dark rounded-lg drop-shadow p-2 focus-visible:outline-darkBlue;
+}
+
+form.update-form input {
+  @apply text-darkBlue;
 }
 
 textarea {

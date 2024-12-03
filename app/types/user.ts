@@ -7,10 +7,7 @@ export type AuthType = {
   login: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
   reloadUser: () => boolean;
-  setEmail: (email: string) => Promise<void>;
-  setDisplayName: (name: string) => Promise<void>;
-  setPassword: (password: string) => Promise<void>;
-  setPhotoUrl: (url: string) => Promise<void>;
+  updateUserProfile: (data: UpdateProfileFormFieldsType) => Promise<void>;
   currentUser: User | null;
   userEmail: string | null;
   userName: string | null;
@@ -39,3 +36,13 @@ export const signupFormSchema = z
   );
 
 export type SignupFormFieldsType = z.infer<typeof signupFormSchema>;
+
+export const updateProfileFormSchema = z.object({
+  photoUrl: z.string().url().optional(),
+  displayName: z.string().optional(),
+  email: z.string().email(),
+});
+
+export type UpdateProfileFormFieldsType = z.infer<
+  typeof updateProfileFormSchema
+>;
