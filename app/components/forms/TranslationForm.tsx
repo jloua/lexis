@@ -21,13 +21,13 @@ export const TranslationForm = () => {
     const selectedOutputLanguage = watch("output_language");
     const inputText = watch("input");
 
-    const onSubmit: SubmitHandler<TranslationFormFields> = (data) => {
+    const onSubmit: SubmitHandler<TranslationFormFields> = async (data) => {
         console.log(data)
     }
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col justify-start">
-            <div className="flex flex-row mb-8 rounded-full w-fit mx-auto bg-light drop-shadow">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col justify-start gap-4 mt-8">
+            <div className="flex flex-row mb-2 rounded-full w-fit mx-auto bg-light drop-shadow">
                 <div className={selectedType === "translate" ? 'selected toggle' : 'toggle'}>
                     <label htmlFor="translate">TRANSLATE</label>
                     <input
@@ -86,7 +86,7 @@ export const TranslationForm = () => {
             <div className="relative">
                 <label htmlFor="input" className="sr-only">Input</label>
                 <textarea {...register("input")} id="input"></textarea>
-                <span className="absolute right-2 bottom-7 text-xs text-dark text-opacity-90">{inputText.length}/500</span>
+                <span className="absolute right-2 bottom-3 text-xs text-dark text-opacity-90">{inputText.length}/500</span>
             </div>
             <button type="submit" className="ml-auto" disabled={isSubmitting}>Submit</button>
             {errors && <span>{errors.root?.message}</span>}

@@ -1,4 +1,5 @@
 import { User, UserCredential } from "firebase/auth";
+import { z } from "zod";
 
 export type AuthType = {
   signupWEmail: (email: string, password: string) => Promise<UserCredential>;
@@ -15,3 +16,26 @@ export type AuthType = {
   userName: string | null;
   userPhotoUrl: string | null;
 };
+
+export type SignupLoadingContextType = {
+  isLoading: boolean;
+  setIsLoading: (value: boolean) => void;
+};
+
+export const signupFormSchema = z
+  .object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    confirmPassword: z.string().min(8),
+  })
+  .refine(
+    (values) => {
+      return values.confirmPassword === values.password;
+    },
+    {
+      message: "Passwords do not match.",
+      path: ["confirmPassword"],
+    }
+  );
+
+export type SignupFormFieldsType = z.infer<typeof signupFormSchema>;

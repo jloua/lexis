@@ -3,17 +3,15 @@
 import React, { PropsWithChildren, createContext, useEffect, useState } from "react";
 import {
   User,
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut,
   updateEmail,
   updatePassword,
   updateProfile,
 } from "firebase/auth";
 import { AuthType } from "../types/user";
 import { auth } from "../services/firebase/config"
-import { signInWithGoogle } from "@/app/services/firebase/userServices"
+import { logoutFunc, signInWithGoogle, signupWithEmail } from "@/app/services/firebase/userServices"
 
 export const AuthContext = createContext<AuthType | null>(null);
 
@@ -25,7 +23,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null);
 
   const signupWEmail = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password)
+    return signupWithEmail(email, password);
   }
 
   const signupWGoogle = () => {
@@ -36,7 +34,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
   const logout = () => {
-    return signOut(auth);
+    return logoutFunc();
   };
 
   const reloadUser = () => {

@@ -10,17 +10,29 @@ button {
   @apply bg-warmYellow w-fit px-6 py-4 uppercase rounded-full drop-shadow;
 }
 
+button.btn-secondary {
+  @apply bg-light text-dark border border-dark;
+}
+
 main {
-  @apply text-center mx-auto pt-12 grow w-full;
+  @apply text-center mx-auto pt-8 grow w-full mb-12;
 }
 
 h2 {
-  @apply font-sofiaPro text-6xl mb-4;
+  @apply font-sofiaPro text-6xl;
 }
 
+h3 {
+  @apply font-sofiaPro text-xl;
+}
+
+/* Form styles */
+
 form textarea,
-form select {
-  @apply bg-light text-dark border border-dark rounded-lg drop-shadow mb-4 p-2 focus-visible:outline-darkBlue;
+form select,
+form input[type="email"],
+form input[type="password"] {
+  @apply bg-light text-dark border border-dark rounded-lg drop-shadow p-2 focus-visible:outline-darkBlue;
 }
 
 textarea {
@@ -41,4 +53,9 @@ select {
 
 .toggle * {
   @apply hover:cursor-pointer;
+}
+
+/* Form response */
+.error {
+  @apply text-xs text-red-700;
 }

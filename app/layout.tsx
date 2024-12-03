@@ -4,6 +4,7 @@ import { Space_Mono } from 'next/font/google'
 import Link from "next/link";
 import "./globals.css";
 import AuthContextProvider from "./contexts/AuthContextProvider";
+import Navbar from "./components/Navbar";
 
 const sofiaPro = localFont({
 	src: "./fonts/SofiaPro.otf",
@@ -36,30 +37,19 @@ export default function RootLayout({
 				className={`${spaceMono.variable} ${sofiaPro.variable} antialiased`}
 			>
 				<AuthContextProvider>
-					<div className="flex flex-row justify-between">
-						<Link href="/">
-							<div className="text-darkBlue">
-								<h1>lexis</h1>
-								<p className="text-[8px]">
-									Simplify language,
-									<br />
-									amplify understanding
-								</p>
-							</div>
-
-						</Link>
-						<div className="flex flex-row gap-2">
-							<Link href="/signup">Sign up</Link>
-							<Link href="/login">Log in</Link>
+					<Link href="/">
+						<div className="text-darkBlue">
+							<h1>lexis</h1>
+							<p className="text-[8px]">
+								Simplify language,
+								<br />
+								amplify understanding
+							</p>
 						</div>
-					</div>
+					</Link>
 
 					{children}
-					<nav className="flex flex-row justify-between pb-4">
-						<Link href="/">Learn</Link>
-						<Link href="/practice">Practice</Link>
-						<Link href="/profile">Profile</Link>
-					</nav>
+					<Navbar />
 				</AuthContextProvider>
 			</body>
 		</html>
