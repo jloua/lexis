@@ -88,7 +88,7 @@ export const TranslationForm = () => {
                 <textarea {...register("input")} id="input"></textarea>
                 <span className="absolute right-2 bottom-3 text-xs text-dark text-opacity-90">{inputText.length}/500</span>
             </div>
-            <button type="submit" className="ml-auto" disabled={isSubmitting}>Submit</button>
+            <button type="submit" className="btn-primary ml-auto" disabled={isSubmitting}>Submit</button>
             {errors && <span>{errors.root?.message}</span>}
         </form>
     )

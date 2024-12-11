@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Space_Mono } from 'next/font/google'
-import Link from "next/link";
 import "./globals.css";
 import AuthContextProvider from "./contexts/AuthContextProvider";
 import Navbar from "./components/Navbar";
+import { Header } from "./components/Header";
 
 const sofiaPro = localFont({
 	src: "./fonts/SofiaPro.otf",
@@ -37,17 +37,7 @@ export default function RootLayout({
 				className={`${spaceMono.variable} ${sofiaPro.variable} antialiased`}
 			>
 				<AuthContextProvider>
-					<Link href="/">
-						<div className="text-darkBlue">
-							<h1>lexis</h1>
-							<p className="text-[8px]">
-								Simplify language,
-								<br />
-								amplify understanding
-							</p>
-						</div>
-					</Link>
-
+					<Header />
 					{children}
 					<Navbar />
 				</AuthContextProvider>

@@ -15,6 +15,9 @@ export default {
         light: "#F2EEEE",
         offWhite: "#F2ECE6",
         dark: "#2A2A2A",
+        hover: {
+          yellow: "#F5CD85",
+        },
       },
       fontFamily: {
         sofiaPro: "var(--font-sofia-pro)",

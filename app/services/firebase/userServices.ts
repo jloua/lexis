@@ -1,14 +1,16 @@
 import {
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithEmailAndPassword,
   signOut,
   updateEmail,
   updateProfile,
   User,
 } from "firebase/auth";
-import { auth, googleAuthProvider } from "./config";
+import { auth, googleAuthProvider, usersCol } from "./config";
 import axios from "axios";
-import { UpdateProfileFormFieldsType } from "@/app/types/user";
+import { UserType } from "@/app/types/user";
+import { addDocument } from "./db";
 
 const setTokenInCookie = async (token: string) => {
   try {
@@ -42,33 +44,55 @@ const handleError = (error: unknown) => {
 };
 
 export const signupWithEmail = async (email: string, password: string) => {
-  const userCredential = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  );
-  const token = await userCredential.user.getIdToken();
-
   try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const { user } = userCredential;
+
+    await addDocument(usersCol, {
+      email: user.email ?? "",
+    });
+
+    const token = await user.getIdToken();
     await setTokenInCookie(token);
   } catch (error) {
     const err = handleError(error);
     throw new Error(err.message, err);
   }
-  return userCredential;
 };
 
 export const signInWithGoogle = async () => {
-  const userCredential = await signInWithPopup(auth, googleAuthProvider);
-  const token = await userCredential.user.getIdToken();
-
   try {
+    const userCredential = await signInWithPopup(auth, googleAuthProvider);
+
+    const token = await userCredential.user.getIdToken();
+
     await setTokenInCookie(token);
   } catch (error) {
     const err = handleError(error);
     throw new Error(err.message, err);
   }
-  return userCredential;
+};
+
+export const loginWPassword = async (email: string, password: string) => {
+  try {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    const token = await userCredential.user.getIdToken();
+
+    await setTokenInCookie(token);
+  } catch (error) {
+    const err = handleError(error);
+    throw new Error(err.message, err);
+  }
 };
 
 export const logoutFunc = async () => {
@@ -78,7 +102,7 @@ export const logoutFunc = async () => {
 
 export const updateUserProfileFunc = async (
   currentUser: User,
-  data: UpdateProfileFormFieldsType
+  data: UserType
 ) => {
   const { email, displayName, photoUrl } = data;
 

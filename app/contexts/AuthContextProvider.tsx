@@ -4,11 +4,10 @@ import React, { PropsWithChildren, createContext, useEffect, useState } from "re
 import {
   User,
   onAuthStateChanged,
-  signInWithEmailAndPassword,
 } from "firebase/auth";
-import { AuthType, UpdateProfileFormFieldsType } from "../types/user";
+import { AuthType, UserType } from "../types/user";
 import { auth } from "../services/firebase/config"
-import { logoutFunc, signInWithGoogle, signupWithEmail, updateUserProfileFunc } from "@/app/services/firebase/userServices"
+import { loginWPassword, logoutFunc, signInWithGoogle, signupWithEmail, updateUserProfileFunc } from "@/app/services/firebase/userServices"
 
 export const AuthContext = createContext<AuthType | null>(null);
 
@@ -19,39 +18,39 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [userName, setUserName] = useState<string | null>(null);
   const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null);
 
-  const signupWEmail = (email: string, password: string) => {
-    return signupWithEmail(email, password);
-  }
+  const signupWEmail = (email: string, password: string) => signupWithEmail(email, password);
 
-  const signupWGoogle = () => {
-    return signInWithGoogle();
-  }
+  const signupWGoogle = () => signInWithGoogle();
 
-  const login = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-  const logout = () => {
-    return logoutFunc();
-  };
+  const login = (email: string, password: string) => loginWPassword(email, password);
 
-  const reloadUser = () => {
+  const logout = () => logoutFunc();
+
+  const reloadUser = async () => {
     if (!currentUser) {
       return false;
     }
 
+    await currentUser.reload();
+    const updatedUser = auth.currentUser;
     setUserName(currentUser.displayName);
     setUserEmail(currentUser.email);
     setUserPhotoUrl(currentUser.photoURL);
 
+    if (updatedUser) {
+      setCurrentUser(updatedUser);
+    }
+
     return true;
   };
 
-  const updateUserProfile = (data: UpdateProfileFormFieldsType) => {
+  const updateUserProfile = async (data: UserType) => {
     if (!currentUser) {
       throw new Error("Unauthorised, you are not logged in");
     }
 
-    return updateUserProfileFunc(currentUser, data);
+    await updateUserProfileFunc(currentUser, data);
+    await reloadUser();
   }
 
   useEffect(() => {

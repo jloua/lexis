@@ -3,18 +3,16 @@
 import { UpdateProfileForm } from "@/app/components/forms/UpdateProfileForm";
 import useAuth from "@/app/hooks/useAuth";
 import Image from "next/image";
-// import { useRouter } from "next/navigation";
 
 export default function Profile() {
-    const { currentUser, userPhotoUrl,
-        // logout 
+    const { currentUser,
+        userPhotoUrl,
+        reloadUser
     } = useAuth();
-    // const router = useRouter();
 
-    // const handleClick = () => {
-    //     logout();
-    //     router.push("/login");
-    // }
+    const handlePhotoUpdated = async () => {
+        await reloadUser();
+    };
 
     return (
         <main className="pt-2">
@@ -26,18 +24,20 @@ export default function Profile() {
 
             {currentUser && (
                 <>
-                    <Image
-                        src={userPhotoUrl || "https://via.placeholder.com/200"}
-                        alt="Profile picture"
-                        width={150}
-                        height={150}
-                        className="rounded-full mx-auto mb-4"
-                    />
+                    <div className="relative w-36 h-36 mx-auto mb-4">
+                        <Image
+                            src={userPhotoUrl || "https://via.placeholder.com/200"}
+                            alt="Profile picture"
+                            fill
+                            sizes="100%"
+                            style={{ objectFit: "cover" }}
+                            className="rounded-full"
+                        />
+                    </div>
+
                     <h3>{currentUser.displayName ?? currentUser.email}</h3>
 
-                    <UpdateProfileForm />
-
-                    {/* <button onClick={handleClick}>Log out</button> */}
+                    <UpdateProfileForm onPhotoUpdated={handlePhotoUpdated} />
                 </>
             )}
         </main>

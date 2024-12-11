@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
 import useAuth from "@/app/hooks/useAuth";
 import useAuthLoading from "@/app/hooks/useAuthLoading";
-import { SignupFormFieldsType, signupFormSchema } from "@/app/types/user";
+import { LoginType, loginFormSchema } from "@/app/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FirebaseError } from "firebase/app";
 import { useRouter } from "next/navigation";
@@ -10,28 +10,28 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Icon } from "../Icon";
 import { useState } from "react";
 
-export const SignUpForm = () => {
-    const { register, handleSubmit, formState: { errors, isSubmitting }, setError, reset } = useForm<SignupFormFieldsType>({ resolver: zodResolver(signupFormSchema) });
-    const { signupWEmail } = useAuth();
+export const LoginForm = () => {
+    const { register, handleSubmit, formState: { errors, isSubmitting }, setError, reset } = useForm<LoginType>({ resolver: zodResolver(loginFormSchema) });
+    const { login } = useAuth();
     const { isLoading, setIsLoading } = useAuthLoading();
     const router = useRouter();
     const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const onSubmit: SubmitHandler<SignupFormFieldsType> = async (data) => {
-        setIsLoading(true);
+    const onSubmit: SubmitHandler<LoginType> = async (data) => {
+        setIsLoading(true)
         try {
-            await signupWEmail(data.email, data.password);
+            await login(data.email, data.password);
             reset();
             router.push("/");
+
         } catch (error) {
-            if (error instanceof FirebaseError || error instanceof Error) {
-                setError("root", error)
+            if (error instanceof FirebaseError) {
+                setError("root", error.code === "auth/invalid-credential" ? { message: "Incorrect email or password. Please try again." } : error)
             } else {
                 setError("root", new Error("Something went wrong, try again."))
             }
         }
-        setIsLoading(false);
+        setIsLoading(false)
     }
 
     return (
@@ -57,21 +57,9 @@ export const SignUpForm = () => {
                 </label>
             </fieldset>
 
-            <fieldset className="w-full text-start">
-                <label htmlFor="confirmPassword">Confirm Password
-                    <div className="relative">
-                        <input type={showConfirmPassword ? "text" : "password"} id="confirmPassword" className="w-full" {...register("confirmPassword")} />
-                        <span className="absolute top-2 right-3" onClick={() => setShowConfirmPassword(!showConfirmPassword)}><Icon type={showConfirmPassword ? "eye" : "eye-closed"} /></span>
-                    </div>
-                    {errors.confirmPassword && (
-                        <span className="error">{errors.confirmPassword.message}</span>
-                    )}
-                </label>
-            </fieldset>
-
-            <button type="submit" className="btn-primary w-full mt-4" disabled={isSubmitting}>{isSubmitting ? "Creating account..." : "Create account"}</button>
+            <button type="submit" className="btn-primary w-full mt-4" disabled={isSubmitting}>{isSubmitting ? "Logging in..." : "Log in"}</button>
             {errors.root && (
-                <span className="error">{errors.root.message}</span>
+                <span className="error mx-auto">{errors.root.message}</span>
             )}
         </form>
     )

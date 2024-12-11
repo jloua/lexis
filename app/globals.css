@@ -6,12 +6,20 @@ body {
   @apply font-spaceMono bg-offWhite text-dark p-6 min-h-screen flex flex-col;
 }
 
-button {
-  @apply bg-warmYellow w-fit px-6 py-4 uppercase rounded-full drop-shadow;
+button.btn-primary {
+  @apply bg-warmYellow px-6 py-4 uppercase rounded-full drop-shadow transition ease-in-out duration-300 hover:bg-hover-yellow;
 }
 
 button.btn-secondary {
-  @apply bg-light text-dark border border-dark;
+  @apply bg-light text-dark border border-dark px-6 py-4 uppercase rounded-full drop-shadow transition ease-in-out duration-300 hover:text-darkBlue hover:border-darkBlue;
+}
+
+button.text-btn {
+  @apply bg-transparent text-darkBlue;
+}
+
+button.photo-btn {
+  @apply bg-light text-dark border border-dark lowercase rounded-lg w-full text-start p-2;
 }
 
 main {

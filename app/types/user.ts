@@ -1,20 +1,20 @@
-import { User, UserCredential } from "firebase/auth";
+import { User } from "firebase/auth";
 import { z } from "zod";
 
 export type AuthType = {
-  signupWEmail: (email: string, password: string) => Promise<UserCredential>;
-  signupWGoogle: () => Promise<UserCredential>;
-  login: (email: string, password: string) => Promise<UserCredential>;
+  signupWEmail: (email: string, password: string) => Promise<void>;
+  signupWGoogle: () => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  reloadUser: () => boolean;
-  updateUserProfile: (data: UpdateProfileFormFieldsType) => Promise<void>;
+  reloadUser: () => Promise<boolean>;
+  updateUserProfile: (data: UserType) => Promise<void>;
   currentUser: User | null;
   userEmail: string | null;
   userName: string | null;
   userPhotoUrl: string | null;
 };
 
-export type SignupLoadingContextType = {
+export type AuthLoadingContextType = {
   isLoading: boolean;
   setIsLoading: (value: boolean) => void;
 };
@@ -37,8 +37,15 @@ export const signupFormSchema = z
 
 export type SignupFormFieldsType = z.infer<typeof signupFormSchema>;
 
+export const loginFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
+
+export type LoginType = z.infer<typeof loginFormSchema>;
+
 export const updateProfileFormSchema = z.object({
-  photoUrl: z.string().url().optional(),
+  profilePhoto: z.instanceof(FileList).optional(),
   displayName: z.string().optional(),
   email: z.string().email(),
 });
@@ -46,3 +53,11 @@ export const updateProfileFormSchema = z.object({
 export type UpdateProfileFormFieldsType = z.infer<
   typeof updateProfileFormSchema
 >;
+
+export const userSchema = z.object({
+  email: z.string().email(),
+  displayName: z.string().optional(),
+  photoUrl: z.string().url().optional(),
+});
+
+export type UserType = z.infer<typeof userSchema>;
