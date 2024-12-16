@@ -25,8 +25,6 @@ export const useAddSearch = (userId?: string) => {
     error: collectionError,
   } = useGetCollection(userId || "", where("title", "==", "All searches"));
 
-  console.log(">>>", loading);
-
   const handleAddSearch = async (newSearchData: SearchItemType) => {
     if (!userId) {
       setError("User must be logged in to add a search.");

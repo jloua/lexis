@@ -11,6 +11,7 @@ import { auth, googleAuthProvider } from "./config";
 import axios from "axios";
 import { UserType } from "@/app/types/user";
 import { addDocument, usersCol } from "./db";
+import { getDocs, query, where } from "firebase/firestore";
 
 const setTokenInCookie = async (token: string) => {
   try {
@@ -73,9 +74,15 @@ export const signInWithGoogle = async () => {
 
     const { user } = userCredential;
 
-    await addDocument(usersCol, {
-      _id: user.uid,
-    });
+    const snapshot = await getDocs(
+      query(usersCol, where("_id", "==", user.uid))
+    );
+
+    if (snapshot.empty) {
+      await addDocument(usersCol, {
+        _id: user.uid,
+      });
+    }
 
     await setTokenInCookie(token);
   } catch (error) {
