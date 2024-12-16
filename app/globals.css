@@ -55,8 +55,7 @@ form.update-form input {
 }
 
 textarea {
-  font-family: Arial, Helvetica, sans-serif;
-  @apply w-full min-h-32 resize-none;
+  @apply w-full min-h-32 resize-none font-[helvetica];
 }
 
 select {

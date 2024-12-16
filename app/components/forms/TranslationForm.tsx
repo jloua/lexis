@@ -1,16 +1,23 @@
 "use client";
 
+import { useAddSearch } from '@/app/hooks/useAddSearch';
+import useAuth from '@/app/hooks/useAuth';
 import { useGetLanguageList } from '@/app/hooks/useGetLanguageList';
 import { TranslationFormFields, TranslationFormSchema } from '@/app/types/forms'
+import { SearchItemType } from '@/app/types/searches';
 import { zodResolver } from '@hookform/resolvers/zod'
+import { FirebaseError } from 'firebase/app';
+import { Timestamp } from 'firebase/firestore';
 import { SubmitHandler, useForm } from 'react-hook-form'
 
 export const TranslationForm = () => {
-    const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm<TranslationFormFields>({
+    const { currentUser } = useAuth();
+    const { handleAddSearch, error: addingError, addingLoading, success } = useAddSearch(currentUser?.uid)
+    const { register, handleSubmit, watch, formState: { errors, isSubmitting }, setError } = useForm<TranslationFormFields>({
         defaultValues: {
             type: "translate",
-            input_language: "en",
-            output_language: "sv",
+            input_language: "English",
+            output_language: "Swedish",
             input: "",
         },
         resolver: zodResolver(TranslationFormSchema)
@@ -22,7 +29,21 @@ export const TranslationForm = () => {
     const inputText = watch("input");
 
     const onSubmit: SubmitHandler<TranslationFormFields> = async (data) => {
-        console.log(data)
+        const newSearch: SearchItemType = {
+            input_lang: data.input_language,
+            output_lang: data.output_language,
+            input: data.input,
+            output: "Here be output",
+            created_at: Timestamp.fromDate(new Date())
+        }
+
+        if (currentUser) {
+            try {
+                await handleAddSearch(newSearch)
+            } catch (error) {
+                setError("root", { message: error instanceof (Error || FirebaseError) ? error.message : "Couldn't add search to My Searches" })
+            }
+        }
     }
 
     return (
@@ -60,7 +81,7 @@ export const TranslationForm = () => {
                         <select id="input_language" {...register("input_language")} value={selectedInputLanguage}>
                             {loading && <option>Loading...</option>}
                             {languages && languages.map(lang => (
-                                <option key={lang.code} value={lang.code}>{lang.name}</option>
+                                <option key={lang.code} value={lang.name}>{lang.name}</option>
                             ))}
                         </select>
                         <svg className="absolute top-[18px] right-2" width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -73,7 +94,7 @@ export const TranslationForm = () => {
                         <select {...register("output_language")} id="output_language" value={selectedOutputLanguage}>
                             {loading && <option>Loading...</option>}
                             {languages && languages.map(lang => (
-                                <option key={lang.code} value={lang.code}>{lang.name}</option>
+                                <option key={lang.code} value={lang.name}>{lang.name}</option>
                             ))}
                         </select>
                         <svg className="absolute top-[18px] right-2" width="16" height="11" viewBox="0 0 16 11" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -89,7 +110,14 @@ export const TranslationForm = () => {
                 <span className="absolute right-2 bottom-3 text-xs text-dark text-opacity-90">{inputText.length}/500</span>
             </div>
             <button type="submit" className="btn-primary ml-auto" disabled={isSubmitting}>Submit</button>
+
+            {addingLoading && <div>Adding to My searches...</div>}
+            {addingError && <span className="error">{addingError}</span>}
             {errors && <span>{errors.root?.message}</span>}
+
+            {success && !addingLoading && !addingError && (
+                <div className="text-green-500 mt-4">Search added successfully!</div>
+            )}
         </form>
     )
 }

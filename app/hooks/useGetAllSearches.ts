@@ -10,23 +10,19 @@ import { db } from "../services/firebase/config";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { useEffect, useState } from "react";
 import { GetSearchItemsResult, SearchItemType } from "../types/searches";
+import { useGetCollection } from "./useGetCollection";
 
 export const useGetAllSearches = (userId: string): GetSearchItemsResult => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [userDocId, setuserDocId] = useState<string | null>(null);
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
-  const [userData, userLoading, userError] = useCollection(
-    query(collection(db, "users"), where("_id", "==", userId))
-  );
-
-  const [collectionData, collectionLoading, collectionError] = useCollection(
-    query(
-      collection(db, `users/${userDocId}/collections`),
-      where("title", "==", "All searches")
-    )
-  );
+  const {
+    userDocId,
+    collectionData,
+    loading: collectionLoading,
+    error: collectionError,
+  } = useGetCollection(userId, where("title", "==", "All searches"));
 
   const [itemsData, itemsLoading, itemsError] = useCollection<SearchItemType>(
     selectedDocId
@@ -40,25 +36,18 @@ export const useGetAllSearches = (userId: string): GetSearchItemsResult => {
   );
 
   useEffect(() => {
-    setLoading(userLoading || collectionLoading || itemsLoading);
-  }, [userLoading, collectionLoading, itemsLoading]);
+    setLoading(collectionLoading || itemsLoading);
+  }, [collectionLoading, itemsLoading]);
 
   useEffect(() => {
-    if (userError || collectionError || itemsError) {
+    if (collectionError || itemsError) {
       setError(
-        (userError && userError.message) ||
-          (collectionError && collectionError.message) ||
+        (collectionError && collectionError) ||
           (itemsError && itemsError.message) ||
           "Unknow error getting all searches"
       );
     }
-  }, [userError, collectionError, itemsError]);
-
-  useEffect(() => {
-    if (userData && userData.docs.length) {
-      setuserDocId(userData.docs[0].id);
-    }
-  }, [userData]);
+  }, [collectionError, itemsError]);
 
   useEffect(() => {
     if (collectionData && collectionData.docs.length) {

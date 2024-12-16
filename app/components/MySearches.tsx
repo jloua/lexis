@@ -6,8 +6,6 @@ import { useGetAllSearches } from "../hooks/useGetAllSearches";
 import { SearchItemType } from "../types/searches";
 import { SearchList } from "./SearchList";
 
-
-
 export const MySearches = ({ userId }: { userId: string }) => {
     const { snapshot, error, loading } = useGetAllSearches(userId);
     const [docs, setDocs] = useState<QueryDocumentSnapshot<SearchItemType, DocumentData>[] | null>(null);
