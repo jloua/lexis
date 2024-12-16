@@ -22,16 +22,24 @@ button.photo-btn {
   @apply bg-light text-dark border border-dark lowercase rounded-lg w-full text-start p-2;
 }
 
-main {
-  @apply text-center mx-auto pt-8 grow w-full mb-12;
-}
-
 h2 {
   @apply font-sofiaPro text-6xl;
 }
 
 h3 {
   @apply font-sofiaPro text-xl;
+}
+
+li {
+  @apply text-start border border-transparent border-b-dark p-4 flex flex-row justify-between;
+}
+
+li:last-of-type {
+  @apply border-b-transparent;
+}
+
+main {
+  @apply text-center mx-auto pt-8 grow w-full mb-12;
 }
 
 /* Form styles */

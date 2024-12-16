@@ -1,6 +1,7 @@
 "use client";
 
 import { UpdateProfileForm } from "@/app/components/forms/UpdateProfileForm";
+import { MySearches } from "@/app/components/MySearches";
 import useAuth from "@/app/hooks/useAuth";
 import Image from "next/image";
 
@@ -38,6 +39,8 @@ export default function Profile() {
                     <h3>{currentUser.displayName ?? currentUser.email}</h3>
 
                     <UpdateProfileForm onPhotoUpdated={handlePhotoUpdated} />
+
+                    <MySearches userId={currentUser.uid} />
                 </>
             )}
         </main>

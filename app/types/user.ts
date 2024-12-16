@@ -61,3 +61,7 @@ export const userSchema = z.object({
 });
 
 export type UserType = z.infer<typeof userSchema>;
+
+export type UserDocType = {
+  _id: string;
+};

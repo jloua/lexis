@@ -7,10 +7,10 @@ import {
   updateProfile,
   User,
 } from "firebase/auth";
-import { auth, googleAuthProvider, usersCol } from "./config";
+import { auth, googleAuthProvider } from "./config";
 import axios from "axios";
 import { UserType } from "@/app/types/user";
-import { addDocument } from "./db";
+import { addDocument, usersCol } from "./db";
 
 const setTokenInCookie = async (token: string) => {
   try {
@@ -54,7 +54,7 @@ export const signupWithEmail = async (email: string, password: string) => {
     const { user } = userCredential;
 
     await addDocument(usersCol, {
-      email: user.email ?? "",
+      _id: user.uid,
     });
 
     const token = await user.getIdToken();
@@ -70,6 +70,12 @@ export const signInWithGoogle = async () => {
     const userCredential = await signInWithPopup(auth, googleAuthProvider);
 
     const token = await userCredential.user.getIdToken();
+
+    const { user } = userCredential;
+
+    await addDocument(usersCol, {
+      _id: user.uid,
+    });
 
     await setTokenInCookie(token);
   } catch (error) {

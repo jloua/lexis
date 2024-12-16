@@ -1,12 +1,6 @@
-import { UserType } from "@/app/types/user";
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import {
-  collection,
-  CollectionReference,
-  DocumentData,
-  getFirestore,
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -27,11 +21,5 @@ export const googleAuthProvider = new GoogleAuthProvider();
 export const db = getFirestore(app);
 
 export const storage = getStorage(app);
-
-const createCollection = <T = DocumentData>(collectionName: string) => {
-  return collection(db, collectionName) as CollectionReference<T>;
-};
-
-export const usersCol = createCollection<UserType>("users");
 
 export default app;
