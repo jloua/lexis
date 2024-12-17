@@ -8,7 +8,7 @@ import { useGetUserDoc } from "./useGetUserDoc";
 
 export const useGetCollection = (
   userId: string,
-  queryConstraint: QueryConstraint
+  queryConstraints: QueryConstraint[]
 ) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -20,7 +20,7 @@ export const useGetCollection = (
   } = useGetUserDoc(userId);
 
   const [collectionData, collectionLoading, collectionError] = useCollection(
-    query(collection(db, `users/${userDocId}/collections`), queryConstraint)
+    query(collection(db, `users/${userDocId}/collections`), ...queryConstraints)
   );
 
   useEffect(() => {

@@ -3,6 +3,7 @@
 import {
   collection,
   CollectionReference,
+  orderBy,
   query,
   where,
 } from "firebase/firestore";
@@ -22,7 +23,7 @@ export const useGetAllSearches = (userId: string): GetSearchItemsResult => {
     collectionData,
     loading: collectionLoading,
     error: collectionError,
-  } = useGetCollection(userId, where("title", "==", "All searches"));
+  } = useGetCollection(userId, [where("title", "==", "All searches")]);
 
   const [itemsData, itemsLoading, itemsError] = useCollection<SearchItemType>(
     selectedDocId
@@ -30,7 +31,8 @@ export const useGetAllSearches = (userId: string): GetSearchItemsResult => {
           collection(
             db,
             `users/${userDocId}/collections/${selectedDocId}/items`
-          ) as CollectionReference<SearchItemType>
+          ) as CollectionReference<SearchItemType>,
+          orderBy("created_at", "desc")
         )
       : null
   );

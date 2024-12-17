@@ -9,6 +9,10 @@ const useGeminiAPI = () => {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
 
+  const resetResult = () => {
+    setResult(null);
+  };
+
   const postGeminiRequestHandler = async (userInput: GeminiPostReqType) => {
     setLoading(true);
     setError(null);
@@ -16,6 +20,8 @@ const useGeminiAPI = () => {
     try {
       const res = await postGeminiRequest(userInput);
       setResult(res);
+      setLoading(false);
+      return res;
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -30,6 +36,7 @@ const useGeminiAPI = () => {
     error,
     loading,
     result,
+    resetResult,
     postGeminiRequest: postGeminiRequestHandler,
   };
 };

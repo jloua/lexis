@@ -15,7 +15,6 @@ export const useAddSearch = (userId?: string) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [addingLoading, setAddingLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null);
 
   const {
@@ -23,7 +22,7 @@ export const useAddSearch = (userId?: string) => {
     collectionData,
     loading: collectionLoading,
     error: collectionError,
-  } = useGetCollection(userId || "", where("title", "==", "All searches"));
+  } = useGetCollection(userId || "", [where("title", "==", "All searches")]);
 
   const handleAddSearch = async (newSearchData: SearchItemType) => {
     if (!userId) {
@@ -33,7 +32,6 @@ export const useAddSearch = (userId?: string) => {
 
     setAddingLoading(true);
     setError(null);
-    setSuccess(false);
 
     try {
       if (!userDocId) {
@@ -49,8 +47,6 @@ export const useAddSearch = (userId?: string) => {
         const subColRef = newSearchItemsCol(userDocId, newDocRef.id);
         await addDocument(subColRef, newSearchData);
       }
-
-      setSuccess(true);
     } catch (error) {
       if (error instanceof (Error || FirebaseError)) {
         setError(error.message);
@@ -76,6 +72,5 @@ export const useAddSearch = (userId?: string) => {
     addingLoading,
     error,
     loading,
-    success,
   };
 };

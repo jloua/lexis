@@ -9,7 +9,8 @@ import {
 import axios from "axios";
 
 const llm = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-flash",
+  model: "gemini-1.5-pro",
+  apiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
   temperature: 0.3,
   maxRetries: 2,
 });

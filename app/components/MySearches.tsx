@@ -29,9 +29,12 @@ export const MySearches = ({ userId }: { userId: string }) => {
             {docs && (
                 <>
                     <h3 >My searches</h3>
-                    <div className={isOpen ? "h-fit border border-dark rounded-lg drop-shadow" : "h-72 overflow-hidden relative border border-dark rounded-t-lg"}>
-                        <div className={isOpen ? "hidden" : "absolute w-full h-72 bg-gradient-to-t from-dark to-transparent to-30% opacity-40"}></div>
-                        <SearchList docs={docs} />
+                    <div className="searchlist">
+                        {isOpen || docs.length < 4 ? (
+                            <SearchList docs={docs} />
+                        ) : (
+                            <SearchList docs={docs.slice(0, 3)} />
+                        )}
                     </div>
                     {docs.length > 3 && (
                         <button className="btn-primary ml-auto" onClick={seeAll}>{isOpen ? "Show less" : "See all"}</button>

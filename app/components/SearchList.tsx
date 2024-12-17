@@ -6,19 +6,25 @@ export const SearchList = ({ docs }: { docs: QueryDocumentSnapshot<SearchItemTyp
 
     return (
         <>
-            {docs && (<ul className="bg-light rounded-lg">
-                {docs.map(doc => (
-                    <li key={doc.id} className="text-start border border-transparent border-b-dark p-4 flex flex-row justify-between">
-                        <div className="flex flex-col gap-2">
-                            <span className="text-[10px]">{doc.data().input_lang} - {doc.data().output_lang}</span>
-                            <p className="font-[helvetica]">{doc.data().input}</p>
-                            <p className="font-bold font-[helvetica]">{doc.data().output}</p>
-                        </div>
-                        <div>
-                            <span className="hover:cursor-pointer" role="button"><Icon type="delete" /></span>
-                        </div>
-                    </li>
-                ))}
+            {docs && (<ul className="rounded-lg">
+                {docs.map(doc => {
+                    const { type, input_lang, output_lang, input, output } = doc.data();
+                    const typeTitle = type === "simplify" ? "Simplification" : "Translation"
+
+                    return (
+                        <li key={doc.id}>
+                            <div className="flex flex-col gap-1">
+                                <span className="text-[10px]">{input_lang} {output_lang && `- ${output_lang}`}</span>
+                                <p className="font-[helvetica]">{input}</p>
+                                <p className="font-bold font-[helvetica]">{output}</p>
+                            </div>
+                            <div className="flex flex-col justify-between items-end">
+                                <span className="text-[10px] text-darkBlue">{typeTitle}</span>
+                                <span className="hover:cursor-pointer pb-1" role="button"><Icon type="delete" /></span>
+                            </div>
+                        </li>
+                    )
+                })}
             </ul>)}
         </>
     )
