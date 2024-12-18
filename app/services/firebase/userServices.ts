@@ -6,6 +6,7 @@ import {
   updateEmail,
   updateProfile,
   User,
+  deleteUser,
 } from "firebase/auth";
 import { auth, googleAuthProvider } from "./config";
 import axios from "axios";
@@ -135,4 +136,9 @@ export const updateUserProfileFunc = async (
     const err = handleError(error);
     throw new Error(err.message, err);
   }
+};
+
+export const deleteUserFromAuth = async (currentUser: User) => {
+  await deleteTokenInCookie();
+  return deleteUser(currentUser);
 };

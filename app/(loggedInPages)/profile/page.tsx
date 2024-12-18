@@ -1,5 +1,6 @@
 "use client";
 
+import { DeleteUserButton } from "@/app/components/DeleteUserButton";
 import { UpdateProfileForm } from "@/app/components/forms/UpdateProfileForm";
 import { MySearches } from "@/app/components/MySearches";
 import useAuth from "@/app/hooks/useAuth";
@@ -41,6 +42,8 @@ export default function Profile() {
                     <UpdateProfileForm onPhotoUpdated={handlePhotoUpdated} />
 
                     <MySearches userId={currentUser.uid} />
+
+                    <DeleteUserButton userId={currentUser.uid} />
                 </>
             )}
         </main>
