@@ -1,9 +1,8 @@
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import { CollectionReference, DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { Icon } from "./Icon";
 import { SearchItemType } from "../types/searches";
 
-export const SearchList = ({ docs }: { docs: QueryDocumentSnapshot<SearchItemType, DocumentData>[] }) => {
-
+export const SearchList = ({ docs, onDeleteClick }: { docs: QueryDocumentSnapshot<SearchItemType, DocumentData>[], onDeleteClick: (docId: string, colRef: CollectionReference<DocumentData, DocumentData>) => Promise<void> }) => {
     return (
         <>
             {docs && (<ul className="rounded-lg">
@@ -20,7 +19,7 @@ export const SearchList = ({ docs }: { docs: QueryDocumentSnapshot<SearchItemTyp
                             </div>
                             <div className="flex flex-col justify-between items-end">
                                 <span className="text-[10px] text-darkBlue">{typeTitle}</span>
-                                <span className="hover:cursor-pointer pb-1" role="button"><Icon type="delete" /></span>
+                                <span className="hover:cursor-pointer pb-1" role="button" onClick={() => onDeleteClick(doc.id, doc.ref.parent)}><Icon type="delete" /></span>
                             </div>
                         </li>
                     )
