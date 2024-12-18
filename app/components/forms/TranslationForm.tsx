@@ -120,7 +120,16 @@ export const TranslationForm = () => {
                     <span className="absolute right-2 bottom-3 text-xs text-dark text-opacity-90">{inputText.length}/500</span>
                 </div>
                 <div className="submit ml-auto">
-                    <button type="submit" className="btn-primary" disabled={isSubmitting || addingLoading || geminiLoading}>Submit</button>
+                    <button type="submit" className="btn-primary" disabled={isSubmitting || addingLoading || geminiLoading}>
+                        {selectedType === "translate"
+                            ? isSubmitting
+                                ? "Translating..."
+                                : "Translate"
+                            : isSubmitting
+                                ? "Simplifying..."
+                                : "Simplify"
+                        }
+                    </button>
 
                     {addingError && <span className="error w-full">{addingError}</span>}
                     {errors && <span className="error w-full">{errors.root?.message}</span>}

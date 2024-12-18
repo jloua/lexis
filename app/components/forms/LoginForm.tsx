@@ -38,7 +38,7 @@ export const LoginForm = () => {
         <form onSubmit={handleSubmit(onSubmit)} className={`w-full flex flex-col gap-4 items-start my-6 ${isLoading && "pointer-events-none opacity-50"}`}>
             <fieldset className="w-full text-start">
                 <label htmlFor="email">Email
-                    <input type="email" id="email" className="w-full" {...register("email")} />
+                    <input type="email" id="email" className="w-full" autoComplete="email" {...register("email")} />
                     {errors.email && (
                         <span className="error">{errors.email.message}</span>
                     )}
@@ -48,7 +48,7 @@ export const LoginForm = () => {
             <fieldset className="w-full text-start">
                 <label htmlFor="password">Password
                     <div className="relative">
-                        <input type={showPassword ? "text" : "password"} id="password" className="w-full" {...register("password")} />
+                        <input type={showPassword ? "text" : "password"} id="password" className="w-full" autoComplete="current-password" {...register("password")} />
                         <span className="absolute top-2 right-3" onClick={() => setShowPassword(!showPassword)}><Icon type={showPassword ? "eye" : "eye-closed"} /></span>
                     </div>
                     {errors.password && (
