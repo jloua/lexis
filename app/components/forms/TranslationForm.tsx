@@ -36,8 +36,6 @@ export const TranslationForm = () => {
 
             if (geminiOutput && currentUser) {
                 try {
-                    console.log(data)
-
                     await handleAddSearch({
                         type: data.type,
                         input_lang: data.input_language,

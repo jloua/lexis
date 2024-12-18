@@ -7,6 +7,7 @@ import { usersCol } from "../services/firebase/db";
 import { getAuth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { deleteUserFromAuth } from "../services/firebase/userServices";
+import { useDeleteSubcollections } from "./useDeleteSubcollections";
 
 export const useDeleteUser = (userId: string) => {
   const [error, setError] = useState<string | null>(null);
@@ -17,6 +18,13 @@ export const useDeleteUser = (userId: string) => {
     loading: userLoading,
     error: userError,
   } = useGetUserDoc(userId);
+
+  const {
+    deleteSubcollectionAndItems,
+    error: subColError,
+    loading: subColLoading,
+  } = useDeleteSubcollections();
+
   const {
     deleteDocument,
     error: docError,
@@ -38,9 +46,32 @@ export const useDeleteUser = (userId: string) => {
     setError(null);
     setLoading(true);
 
+    const errors: string[] = [];
+
+    // Delete subcollections and their documents belonging to user
+    try {
+      await deleteSubcollectionAndItems(userDocId);
+    } catch (error) {
+      errors.push(
+        error instanceof (Error || FirebaseError)
+          ? error.message
+          : "Failed to delete subcollections and items."
+      );
+    }
+
+    // Delete user document from db
     try {
       await deleteDocument(userDocId, usersCol);
+    } catch (error) {
+      errors.push(
+        error instanceof (Error || FirebaseError)
+          ? error.message
+          : "Failed to delete user doc from db."
+      );
+    }
 
+    // Delete user from auth
+    try {
       const auth = getAuth();
       const currentUser = auth.currentUser;
 
@@ -48,17 +79,24 @@ export const useDeleteUser = (userId: string) => {
         await deleteUserFromAuth(currentUser);
       }
     } catch (error) {
-      setError(
+      errors.push(
         error instanceof (Error || FirebaseError)
           ? error.message
-          : "Error deleting user from auth and db."
+          : "Error deleting user from auth."
       );
     }
+
+    if (errors.length > 0) {
+      setError(errors.join("\n"));
+    } else {
+      setError(null);
+    }
+
     setLoading(false);
   };
   return {
     deleteUserCompletely,
-    error: error || docError || userError,
-    loading: loading || docLoading || userLoading,
+    error: error || docError || userError || subColError,
+    loading: loading || docLoading || userLoading || subColLoading,
   };
 };

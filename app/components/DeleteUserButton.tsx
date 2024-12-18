@@ -4,13 +4,16 @@ import { FirebaseError } from "firebase/app";
 import { useDeleteUser } from "../hooks/useDeleteUser";
 import { useState } from "react";
 import { Icon } from "./Icon";
+import { useRouter } from "next/navigation";
 
 export const DeleteUserButton = ({ userId }: { userId: string }) => {
     const { deleteUserCompletely, error, loading } = useDeleteUser(userId);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const router = useRouter();
 
-    const handleDeleteClick = () => {
-        deleteUserCompletely()
+    const handleDeleteClick = async () => {
+        await deleteUserCompletely();
+        router.push("/signup");
     }
 
     if (error) {
@@ -41,7 +44,7 @@ export const DeleteUserButton = ({ userId }: { userId: string }) => {
                         <div className="mt-4">
                             <h4>Delete account</h4>
                             <p className="p-4 text-start">This action cannot be reversed. If you still want to delete your account including all your search history, press delete.</p>
-                            <button className="btn-primary" onClick={handleDeleteClick} disabled={loading}>Delete</button>
+                            <button className="btn-primary" onClick={handleDeleteClick} disabled={loading}>{loading ? "Deleting..." : "Delete"}</button>
                         </div>
                     </div>
                 </div>
