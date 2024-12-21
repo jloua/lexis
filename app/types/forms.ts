@@ -18,3 +18,9 @@ export const QuizFilterSchema = z.object({
 });
 
 export type QuizFilterType = z.infer<typeof QuizFilterSchema>;
+
+export const CustomQuizSchema = z.object({
+  selectedItemsIds: z.string().array(),
+});
+
+export type CustomQuizType = z.infer<typeof CustomQuizSchema>;

@@ -1,3 +1,4 @@
+import { CustomQuizBuilder } from "@/app/components/forms/CustomQuizBuilder";
 import { QuizFilter } from "@/app/components/forms/QuizFilter";
 
 export default function Practice() {
@@ -9,6 +10,9 @@ export default function Practice() {
             <p className="mt-4 text-start">Customize by using filters.</p>
 
             <QuizFilter />
+
+            <p className="mt-4 text-start">Or pick specific searches.</p>
+            <CustomQuizBuilder />
         </main>
     );
 }
