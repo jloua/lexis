@@ -4,10 +4,10 @@ import { useState } from "react";
 import { Icon } from "../Icon";
 import { useGetLanguageList } from "@/app/hooks/useGetLanguageList";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { QuizFilterSchema, QuizFilterType } from "@/app/types/forms";
+import { FlashCardsType, QuizFilterSchema, QuizFilterType } from "@/app/types/forms";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export const QuizFilter = () => {
+export const QuizFilter = ({ onStartQuiz }: { onStartQuiz: (flashcards: FlashCardsType) => void }) => {
     const { loading, error, result: languages } = useGetLanguageList();
     const [isOpen, setIsOpen] = useState(false);
     const { handleSubmit, register, watch, formState: { errors, isSubmitting } } = useForm<QuizFilterType>({ defaultValues: { type: "translate", number: "10" }, resolver: zodResolver(QuizFilterSchema) });
@@ -25,6 +25,8 @@ export const QuizFilter = () => {
         }
 
         console.log(dataToSend)
+
+        onStartQuiz([])
     }
 
     return (

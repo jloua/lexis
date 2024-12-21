@@ -78,3 +78,21 @@ select {
 .error {
   @apply text-xs text-red-700;
 }
+
+/* Flash card */
+.card {
+  transform-style: preserve-3d;
+  transition: transform 0.7s ease-in-out;
+}
+
+.front,
+.back {
+  backface-visibility: hidden;
+
+  @apply absolute top-0 left-0 w-full h-full flex justify-center items-center;
+}
+
+/* Back face should be rotated 180 degrees initially */
+.back {
+  transform: rotateY(180deg);
+}

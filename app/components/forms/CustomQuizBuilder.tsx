@@ -7,9 +7,9 @@ import useAuth from '@/app/hooks/useAuth';
 import { useGetAllSearches } from '@/app/hooks/useGetAllSearches';
 import { SearchItemType } from '@/app/types/searches';
 import { Icon } from '../Icon';
-import { CustomQuizType } from '@/app/types/forms';
+import { CustomQuizType, FlashCardsType } from '@/app/types/forms';
 
-export const CustomQuizBuilder = () => {
+export const CustomQuizBuilder = ({ onStartQuiz }: { onStartQuiz: (flashcards: FlashCardsType) => void }) => {
     const { currentUser } = useAuth();
     const [userId, setUserId] = useState<string>("");
     const { snapshot } = useGetAllSearches(userId);
@@ -21,8 +21,10 @@ export const CustomQuizBuilder = () => {
     const selectedItems = watch("selectedItemsIds");
 
     const onSubmit: SubmitHandler<CustomQuizType> = (data) => {
-        console.log(data)
+        console.log(data, onStartQuiz)
         setIsOpen(false)
+        // filter out the matching searches based on id:s 
+        // send to onStartQuiz with number as selectedItems.length
     }
 
     useEffect(() => {

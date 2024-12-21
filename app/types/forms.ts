@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SearchItemType } from "./searches";
 
 export const TranslationFormSchema = z.object({
   type: z.enum(["translate", "simplify"]),
@@ -24,3 +25,5 @@ export const CustomQuizSchema = z.object({
 });
 
 export type CustomQuizType = z.infer<typeof CustomQuizSchema>;
+
+export type FlashCardsType = SearchItemType[];
