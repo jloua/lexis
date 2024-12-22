@@ -2,10 +2,9 @@
 
 import { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore';
 import { useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { SearchItemType } from '@/app/types/searches';
 import { Icon } from '../Icon';
-import { CustomQuizType, FlashCardsType } from '@/app/types/forms';
+import { FlashCardsType } from '@/app/types/forms';
 import { CustomQuizModal } from './CustomQuizModal';
 
 export const CustomQuizBuilder = ({ searches, onStartQuiz }: { searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[], onStartQuiz: (flashcards: FlashCardsType) => void }) => {

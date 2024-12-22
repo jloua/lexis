@@ -1,7 +1,7 @@
 "use client";
 
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { SearchItemType } from "../../types/searches";
 import { Icon } from "../Icon";
 
@@ -26,29 +26,28 @@ export const CustomQuizFilter = ({ searches, onFilterChange }: { searches: Query
         outputLangOptions.push("Any language")
     }
 
-    useEffect(() => {
+    const filterSearches = useCallback(() => {
+        let filtered = searches;
+
         if (type !== "any") {
-            const filtered = filteredItems.filter(item => item.data().type === type);
-            setFilteredItems(filtered)
-            onFilterChange(filtered)
+            filtered = filtered.filter(item => item.data().type === type);
         }
-    }, [type])
-
-    useEffect(() => {
         if (inputLang !== "Any language") {
-            const filtered = filteredItems.filter(item => item.data().input_lang === inputLang);
-            setFilteredItems(filtered)
-            onFilterChange(filtered)
+            filtered = filtered.filter(item => item.data().input_lang === inputLang);
         }
-    }, [inputLang])
+        if (outputLang !== "Any language") {
+            filtered = filtered.filter(item => item.data().output_lang === outputLang);
+        }
+
+        return filtered.slice(0, itemCount);
+    }, [type, inputLang, outputLang, itemCount, searches]);
 
     useEffect(() => {
-        if (outputLang !== "Any language") {
-            const filtered = filteredItems.filter(item => item.data().output_lang === outputLang);
-            setFilteredItems(filtered)
-            onFilterChange(filtered)
-        }
-    }, [outputLang])
+        const filtered = filterSearches();
+        onFilterChange(filtered);
+        setFilteredItems(filtered)
+    }, [filterSearches, onFilterChange]);
+
 
     return (
         <div className="mb-4">

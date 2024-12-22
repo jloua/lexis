@@ -6,7 +6,7 @@ import useAuth from "@/app/hooks/useAuth";
 import { useGetAllSearches } from "@/app/hooks/useGetAllSearches";
 import { FlashCardsType } from "@/app/types/forms";
 import { SearchItemType } from "@/app/types/searches";
-import { DocumentData, QueryConstraint, QueryDocumentSnapshot } from "firebase/firestore";
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 export default function Practice() {
