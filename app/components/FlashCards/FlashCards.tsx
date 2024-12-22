@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { FlashCardsType } from "../types/forms";
-import { Icon } from "./Icon";
+import { FlashCardsType } from "../../types/forms";
+import { Icon } from "../Icon";
 
 export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -12,10 +12,19 @@ export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
         setIsFlipped(!isFlipped);
     }
 
+    // const handleSave = () => {
+    //     // open module to name collection
+    //     // send to db as new collection
+    // }
+
     return (
         <div>
             <p className="text-sm mt-4">Card {currentCardIndex + 1} / {flashCards.length}</p>
-            <p className="text-sm mb-2">{flashCards[currentCardIndex].input_lang} - {flashCards[currentCardIndex].output_lang}</p>
+            <p className="text-sm mb-2">{flashCards[currentCardIndex].input_lang} {flashCards[currentCardIndex].output_lang ? "- " + flashCards[currentCardIndex].output_lang : "Simplification"}</p>
+            {/* <div className="relative group flex justify-center items-center text-darkBlue">
+                <button onClick={handleSave} className="text-btn text-sm transition-all duration-300 ease-in-out group-hover:pr-2">Save as collection</button>
+                <span className="font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">+</span>
+            </div> */}
 
             <div
                 onClick={handleFlip}
@@ -27,7 +36,7 @@ export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
                     <p>{flashCards[currentCardIndex].input}</p>
                 </div>
                 <div className="back">
-                    <p className="absolute text-xs top-2 left-2">{flashCards[currentCardIndex].output_lang}</p>
+                    <p className="absolute text-xs top-2 left-2">{flashCards[currentCardIndex].output_lang ?? flashCards[currentCardIndex].input_lang + " simplified"}</p>
                     <p>{flashCards[currentCardIndex].output}</p>
                 </div>
             </div>

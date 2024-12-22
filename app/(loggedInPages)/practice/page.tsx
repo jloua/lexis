@@ -1,57 +1,59 @@
 "use client";
 
-import { FlashCards } from "@/app/components/FlashCards";
-import { CustomQuizBuilder } from "@/app/components/forms/CustomQuizBuilder";
-import { QuizFilter } from "@/app/components/forms/QuizFilter";
+import { FlashCards } from "@/app/components/FlashCards/FlashCards";
+import { CustomQuizBuilder } from "@/app/components/FlashCards/CustomQuizBuilder";
+import useAuth from "@/app/hooks/useAuth";
+import { useGetAllSearches } from "@/app/hooks/useGetAllSearches";
 import { FlashCardsType } from "@/app/types/forms";
-import { Timestamp } from "firebase/firestore";
-import { useState } from "react";
+import { SearchItemType } from "@/app/types/searches";
+import { DocumentData, QueryConstraint, QueryDocumentSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
 
 export default function Practice() {
     const [flashCards, setFlashCards] = useState<FlashCardsType | null>(null);
+    const [searches, setSearches] = useState<QueryDocumentSnapshot<SearchItemType, DocumentData>[] | null>(null)
+    const { currentUser } = useAuth();
+    const [userId, setUserId] = useState<string>("");
+    const { snapshot, loading } = useGetAllSearches(userId);
 
-    const placeholderFlashCards: FlashCardsType = [
-        {
-            input: "Hej",
-            output: "Hola",
-            input_lang: "Swedish",
-            output_lang: "Spanish",
-            type: "translate",
-            created_at: Timestamp.fromDate(new Date())
-        },
-        {
-            input: "Hejsan",
-            output: "Hello",
-            input_lang: "Swedish",
-            output_lang: "English",
-            type: "translate",
-            created_at: Timestamp.fromDate(new Date())
-        },
-        {
-            input: "Hejsan",
-            output: "Hello",
-            input_lang: "Swedish",
-            output_lang: "English",
-            type: "translate",
-            created_at: Timestamp.fromDate(new Date())
+    const handleStart = () => {
+        if (searches) {
+            const shuffled = searches.map(item => item.data()).sort(() => Math.random() - 0.5);
+            const randomCards = shuffled.slice(0, Math.min(shuffled.length, 10));
+            setFlashCards(randomCards)
         }
-    ]
+    }
+
+    useEffect(() => {
+        if (snapshot) {
+            setSearches(snapshot.docs)
+        }
+    }, [snapshot]);
+
+    useEffect(() => {
+        if (currentUser && currentUser.uid) {
+            setUserId(currentUser.uid);
+        }
+    }, [currentUser])
 
     return (
         <main>
             <h2>Practice</h2>
 
-            {/* <p className="mt-6 text-start">Practice 10 random phrases from your search history.</p>
-            <p className="mt-4 text-start">Customize by using filters.</p>
+            {!flashCards && (
+                <>
+                    <p className="mt-6 text-start">Practice 10 random phrases from your search history.</p>
 
-            <QuizFilter onStartQuiz={setFlashCards} />
+                    <p className="mt-4 text-start">Or customize your own.</p>
+                    {searches && <CustomQuizBuilder searches={searches} onStartQuiz={setFlashCards} />}
 
-            <p className="mt-4 text-start">Or pick specific searches.</p>
-            <CustomQuizBuilder onStartQuiz={setFlashCards} /> */}
+                    <button className="btn-primary mx-auto mt-6" onClick={handleStart}>Start</button>
+                </>
+            )}
 
             {/* Flash cards component */}
-            {placeholderFlashCards && (
-                <FlashCards flashCards={placeholderFlashCards} />
+            {flashCards && !loading && (
+                <FlashCards flashCards={flashCards} />
             )}
         </main>
     );

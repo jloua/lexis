@@ -89,7 +89,7 @@ select {
 .back {
   backface-visibility: hidden;
 
-  @apply absolute top-0 left-0 w-full h-full flex justify-center items-center;
+  @apply absolute top-0 left-0 w-full h-full flex justify-center items-center p-2;
 }
 
 /* Back face should be rotated 180 degrees initially */
