@@ -111,7 +111,8 @@ export const loginWPassword = async (email: string, password: string) => {
 
 export const logoutFunc = async () => {
   await deleteTokenInCookie();
-  return signOut(auth);
+
+  return await signOut(auth);
 };
 
 export const updateUserProfileFunc = async (

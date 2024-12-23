@@ -24,7 +24,10 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
 
   const login = (email: string, password: string) => loginWPassword(email, password);
 
-  const logout = () => logoutFunc();
+  const logout = async () => {
+    await logoutFunc();
+    await reloadUser();
+  };
 
   const reloadUser = async () => {
     if (!currentUser) {

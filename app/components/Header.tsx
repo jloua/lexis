@@ -5,11 +5,12 @@ import { useRouter } from "next/navigation";
 import useAuth from '../hooks/useAuth'
 
 export const Header = () => {
-    const { currentUser, logout } = useAuth();
+    const { currentUser, logout, reloadUser } = useAuth();
     const router = useRouter();
 
-    const handleClick = () => {
-        logout();
+    const handleClick = async () => {
+        await logout();
+        await reloadUser();
         router.push("/login");
     }
 
