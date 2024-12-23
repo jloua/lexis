@@ -50,7 +50,7 @@ export const CustomQuizModal = ({ searches, onClose, onStartQuiz }: { searches: 
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
             <div className="bg-offWhite p-6 rounded-lg shadow-lg w-11/12 max-w-md h-[90%]">
                 <button
-                    className="absolute top-[2.75rem] right-[1.75rem] w-8 h-8 bg-light border border-dark rounded-full"
+                    className="absolute top-[2.75rem] right-[1.75rem] md:right-[20.5rem] w-8 h-8 bg-light border border-dark rounded-full"
                     onClick={() => onClose()}
                 >
                     &times;
@@ -63,8 +63,8 @@ export const CustomQuizModal = ({ searches, onClose, onStartQuiz }: { searches: 
                         <CustomQuizSearchList searches={filteredSearches} control={control} />
                     </div>
 
-                    <p className="text-end mt-2">{selectedItems.length === 0 ? "No" : selectedItems.length} selected item{(selectedItems.length > 1 || selectedItems.length === 0) && "s"}</p>
-                    <button type="submit" className="btn-primary absolute bottom-12 right-8" disabled={isSubmitting}>{selectedItems.length > 0 ? "Start quiz" : "Generate quiz"}</button>
+                    <p className="text-end mt-2 md:text-center">{selectedItems.length === 0 ? "No" : selectedItems.length} selected item{(selectedItems.length > 1 || selectedItems.length === 0) && "s"}</p>
+                    <button type="submit" className="btn-primary absolute bottom-12 right-8 md:right-[28rem]" disabled={isSubmitting}>{selectedItems.length > 0 ? "Start quiz" : "Generate quiz"}</button>
                 </form>
             </div>
         </div>

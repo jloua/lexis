@@ -15,7 +15,7 @@ export const Header = () => {
     }
 
     return (
-        <div className="flex flex-row justify-between items-start">
+        <div className="flex flex-row justify-between items-start md:px-8">
             <Link href="/">
                 <div className="text-darkBlue transition duration-300 ease-in-out hover:scale-105">
                     <h1>lexis</h1>

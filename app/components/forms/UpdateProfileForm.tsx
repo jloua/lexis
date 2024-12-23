@@ -55,9 +55,10 @@ export const UpdateProfileForm = ({ onPhotoUpdated }: Props) => {
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={`update-form w-full flex flex-col gap-4 items-start my-6 ${isSubmitting && "pointer-events-none opacity-50"}`}>
-            <div className="relative w-full">
+            <div className="relative w-full text-start">
+                <label htmlFor="displayName">Upload photo</label>
                 <input type="file" accept="image/gif,image/jpeg,image/png,image/webp,image/avif" id="profilePhoto" className="w-full" {...register("profilePhoto")} />
-                <span className="absolute text-dark top-4 right-3"><Icon type="pen" /></span>
+                <span className="absolute text-dark top-10 right-3"><Icon type="pen" /></span>
             </div>
 
             <fieldset className="w-full text-start">

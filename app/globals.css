@@ -39,7 +39,7 @@ li {
 }
 
 main {
-  @apply text-center mx-auto pt-8 grow w-full mb-12;
+  @apply text-center mx-auto pt-8 grow w-full mb-12 md:max-w-md md:px-8;
 }
 
 /* Form styles */
