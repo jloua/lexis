@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { SearchItemType } from "../../types/searches";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
@@ -10,6 +10,7 @@ import { CustomQuizType, FlashCardsType } from "../../types/forms";
 
 export const CustomQuizModal = ({ searches, onClose, onStartQuiz }: { searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[], onClose: () => void, onStartQuiz: (flashcards: FlashCardsType) => void }) => {
     const [filteredSearches, setFilteredSearches] = useState(searches);
+    const [itemCount, setItemCount] = useState(Math.min(searches.length, 10));
     const { handleSubmit, control, watch, formState: { isSubmitting } } = useForm<CustomQuizType>({
         defaultValues: { selectedItemsIds: [] }
     });
@@ -28,15 +29,22 @@ export const CustomQuizModal = ({ searches, onClose, onStartQuiz }: { searches: 
 
             onStartQuiz(searchItems);
         } else {
-            const filteredItems = filteredSearches.map(item => item.data()).slice(0, filteredSearches.length > 10 ? 10 : filteredSearches.length);
+            const filteredItems = filteredSearches
+                .map(item => item.data())
+                .slice(0, filteredSearches.length > 10 ? 10 : filteredSearches.length)
+                .slice(0, itemCount);
 
             onStartQuiz(filteredItems);
         }
     }
 
-    const handleFilterChange = (newFilteredSearches: QueryDocumentSnapshot<SearchItemType, DocumentData>[]) => {
+    const handleFilterChange = useCallback((newFilteredSearches: QueryDocumentSnapshot<SearchItemType, DocumentData>[]) => {
         setFilteredSearches(newFilteredSearches);
-    };
+    }, []);
+
+    const handleItemCountChange = (newCount: number) => {
+        setItemCount(newCount);
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -51,7 +59,7 @@ export const CustomQuizModal = ({ searches, onClose, onStartQuiz }: { searches: 
                     <h4 className="mb-2">Choose searches</h4>
 
                     <div className="h-[75%] overflow-scroll">
-                        <CustomQuizFilter onFilterChange={handleFilterChange} searches={searches} />
+                        <CustomQuizFilter onFilterChange={handleFilterChange} searches={searches} itemCount={itemCount} setItemCount={handleItemCountChange} />
                         <CustomQuizSearchList searches={filteredSearches} control={control} />
                     </div>
 

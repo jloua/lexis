@@ -7,14 +7,15 @@ import { useGetAllSearches } from "@/app/hooks/useGetAllSearches";
 import { FlashCardsType } from "@/app/types/forms";
 import { SearchItemType } from "@/app/types/searches";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Practice() {
     const [flashCards, setFlashCards] = useState<FlashCardsType | null>(null);
-    const [searches, setSearches] = useState<QueryDocumentSnapshot<SearchItemType, DocumentData>[] | null>(null)
     const { currentUser } = useAuth();
     const [userId, setUserId] = useState<string>("");
     const { snapshot, loading } = useGetAllSearches(userId);
+
+    const searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[] = useMemo(() => (snapshot ? snapshot.docs : []), [snapshot]);
 
     const handleStart = () => {
         if (searches) {
@@ -23,12 +24,6 @@ export default function Practice() {
             setFlashCards(randomCards)
         }
     }
-
-    useEffect(() => {
-        if (snapshot) {
-            setSearches(snapshot.docs)
-        }
-    }, [snapshot]);
 
     useEffect(() => {
         if (currentUser && currentUser.uid) {
@@ -51,7 +46,6 @@ export default function Practice() {
                 </>
             )}
 
-            {/* Flash cards component */}
             {flashCards && !loading && (
                 <FlashCards flashCards={flashCards} />
             )}

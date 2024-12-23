@@ -1,17 +1,23 @@
 "use client";
 
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { SearchItemType } from "../../types/searches";
 import { Icon } from "../Icon";
 
-export const CustomQuizFilter = ({ searches, onFilterChange }: { searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[], onFilterChange: (filteredSearches: QueryDocumentSnapshot<SearchItemType, DocumentData>[]) => void }) => {
+interface CustomQuizFilterProps {
+    searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[];
+    onFilterChange: (filteredSearches: QueryDocumentSnapshot<SearchItemType, DocumentData>[]) => void;
+    itemCount: number;
+    setItemCount: (newCount: number) => void
+}
+
+export const CustomQuizFilter = ({ searches, onFilterChange, itemCount, setItemCount }: CustomQuizFilterProps) => {
     const [isOpen, setIsOpen] = useState(false);
+    const [filteredItems, setFilteredItems] = useState<QueryDocumentSnapshot<SearchItemType, DocumentData>[]>(searches);
     const [type, setType] = useState<"translate" | "simplify" | "any">("any");
     const [inputLang, setInputLang] = useState("Any language");
     const [outputLang, setOutputLang] = useState("Any language");
-    const [itemCount, setItemCount] = useState(1);
-    const [filteredItems, setFilteredItems] = useState<QueryDocumentSnapshot<SearchItemType, DocumentData>[]>(searches);
 
     const inputLangOptions = [...new Set(searches.map(search => search.data().input_lang))]
     const outputLangOptions = type === "translate" && inputLang
@@ -26,28 +32,32 @@ export const CustomQuizFilter = ({ searches, onFilterChange }: { searches: Query
         outputLangOptions.push("Any language")
     }
 
-    const filterSearches = useCallback(() => {
-        let filtered = searches;
+    useEffect(() => {
+        const filterItems = () => {
+            let filtered = [...searches];
 
-        if (type !== "any") {
-            filtered = filtered.filter(item => item.data().type === type);
-        }
-        if (inputLang !== "Any language") {
-            filtered = filtered.filter(item => item.data().input_lang === inputLang);
-        }
-        if (outputLang !== "Any language") {
-            filtered = filtered.filter(item => item.data().output_lang === outputLang);
-        }
+            if (type !== "any") {
+                filtered = filtered.filter((item) => item.data().type === type);
+            }
+            if (inputLang !== "Any language") {
+                filtered = filtered.filter((item) => item.data().input_lang === inputLang);
+            }
+            if (outputLang !== "Any language") {
+                filtered = filtered.filter((item) => item.data().output_lang === outputLang);
+            }
 
-        return filtered.slice(0, itemCount);
-    }, [type, inputLang, outputLang, itemCount, searches]);
+            setFilteredItems(filtered);
+            onFilterChange(filtered);
+        };
+
+        filterItems();
+    }, [type, inputLang, outputLang, searches, onFilterChange]);
 
     useEffect(() => {
-        const filtered = filterSearches();
-        onFilterChange(filtered);
-        setFilteredItems(filtered)
-    }, [filterSearches, onFilterChange]);
-
+        if (itemCount > filteredItems.length) {
+            setItemCount(filteredItems.length)
+        }
+    }, [itemCount, filteredItems.length, setItemCount])
 
     return (
         <div className="mb-4">
@@ -102,7 +112,10 @@ export const CustomQuizFilter = ({ searches, onFilterChange }: { searches: Query
 
                 <fieldset>
                     <label htmlFor="number" className="text-xs">Number of phrases</label>
-                    <input value={itemCount} type="number" id="number" onChange={e => setItemCount(parseInt(e.target.value))} className="w-full" min={1} max={filteredItems.length} />
+                    <input value={itemCount} type="number" id="number" onChange={e => {
+                        const newCount = Math.max(1, Math.min(parseInt(e.target.value) || 1, filteredItems.length));
+                        setItemCount(newCount);
+                    }} className="w-full" min={1} max={filteredItems.length} />
                 </fieldset>
 
             </div>)}
