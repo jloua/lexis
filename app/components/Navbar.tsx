@@ -7,7 +7,7 @@ const Navbar = () => {
     const { currentUser } = useAuth();
 
     return (
-        <nav className="flex flex-row justify-between pb-4">
+        <nav className="flex flex-row justify-between p-4 fixed bottom-0 left-0 right-0 w-full bg-offWhite">
             <Link href="/">Learn</Link>
             {currentUser && (
                 <>
