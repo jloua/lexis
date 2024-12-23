@@ -57,7 +57,7 @@ export const MySearches = ({ userId }: { userId: string }) => {
             {error && <span className="error">{error}</span>}
             {loading && !docs && <span>Loading...</span>}
 
-            {docs && (
+            {docs && docs.length > 0 && (
                 <>
                     <h3 >My searches</h3>
                     <div className="searchlist">

@@ -8,6 +8,7 @@ import { FlashCardsType } from "@/app/types/forms";
 import { SearchItemType } from "@/app/types/searches";
 import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 export default function Practice() {
     const [flashCards, setFlashCards] = useState<FlashCardsType | null>(null);
@@ -35,7 +36,20 @@ export default function Practice() {
         <main>
             <h2>Practice</h2>
 
-            {!flashCards && (
+            {!loading && searches.length < 1 && (
+                <>
+                    <p className="mt-6 text-start">
+                        You haven&apos;t made any searches yet.
+                    </p>
+                    <p className="mt-4 text-start">Translate or simplify a few phrases before returning here to practice them.</p>
+
+                    <button className="btn-primary mx-auto mt-6">
+                        <Link href="/">Translate</Link>
+                    </button>
+                </>
+            )}
+
+            {!flashCards && searches.length > 0 && (
                 <>
                     <p className="mt-6 text-start">Practice 10 random phrases from your search history.</p>
 
