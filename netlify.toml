@@ -5,3 +5,6 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions.gemini]
+  timeout = 26 
