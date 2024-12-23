@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import * as dotenv from "dotenv";
 import { simplifyText, translateText } from "@/app/services/gemini";
 import { GeminiPostReqSchema } from "@/app/types/gemini";
 
 dotenv.config();
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
     const json = await request.json();
     const validatedRequest = GeminiPostReqSchema.safeParse(json);
