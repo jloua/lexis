@@ -18,11 +18,20 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   const [userName, setUserName] = useState<string | null>(null);
   const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null);
 
-  const signupWEmail = (email: string, password: string) => signupWithEmail(email, password);
+  const signupWEmail = async (email: string, password: string) => {
+    await signupWithEmail(email, password);
+    await reloadUser();
+  };
 
-  const signupWGoogle = () => signInWithGoogle();
+  const signupWGoogle = async () => {
+    await signInWithGoogle();
+    await reloadUser();
+  };
 
-  const login = (email: string, password: string) => loginWPassword(email, password);
+  const login = async (email: string, password: string) => {
+    await loginWPassword(email, password);
+    await reloadUser();
+  };
 
   const logout = async () => {
     await logoutFunc();

@@ -36,6 +36,24 @@ export const TranslationForm = () => {
             const geminiOutput = await postGeminiRequest(data)
 
             if (geminiOutput && currentUser) {
+                const failureIndicators = [
+                    "I cannot",
+                    "I am unable",
+                    "Error",
+                    "Failed",
+                    "Please provide the text",
+                ];
+                const hasFailure = failureIndicators.some((indicator) =>
+                    geminiOutput.toLowerCase().includes(indicator.toLowerCase())
+                );
+
+                if (hasFailure) {
+                    setError("root", {
+                        message: "AI could not process the request successfully.",
+                    });
+                    return;
+                }
+
                 try {
                     await handleAddSearch({
                         type: data.type,

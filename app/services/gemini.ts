@@ -57,19 +57,46 @@ export const translateText = async (
   ]);
   const chain = prompt.pipe(llm);
 
-  const response = await chain.invoke({
-    input_language,
-    output_language,
-    input,
-  });
+  try {
+    const response = await chain.invoke({
+      input_language,
+      output_language,
+      input,
+    });
 
-  return validateResponse(response);
+    return validateResponse(response);
+  } catch (error) {
+    return {
+      data: null,
+      hasFailure: true,
+      message: error instanceof Error ? error.message : "Error invoking LLM",
+    };
+  }
 };
 
 export const postGeminiRequest = async (data: GeminiPostReqType) => {
   try {
     const res = await axios.post<GeminiResponse>("../api/gemini", data);
-    return res.data.message.content;
+    const { message } = res.data;
+    const failureIndicators = [
+      "I cannot",
+      "I am unable",
+      "Error",
+      "Failed",
+      "Please provide the text",
+    ];
+    const containsFailure = failureIndicators.some((indicator) =>
+      message.content.toLowerCase().includes(indicator.toLowerCase())
+    );
+
+    if (containsFailure) {
+      throw new Error(
+        "AI response indicates failure: " +
+          message.content +
+          "Please try another word or phrase."
+      );
+    }
+    return message.content;
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(error.message);
