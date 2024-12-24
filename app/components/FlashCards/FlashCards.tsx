@@ -4,7 +4,7 @@ import { useState } from "react";
 import { FlashCardsType } from "../../types/forms";
 import { Icon } from "../Icon";
 
-export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
+export const FlashCards = ({ flashCards, onBackToPractice }: { flashCards: FlashCardsType, onBackToPractice: () => void }) => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [isFlipped, setIsFlipped] = useState(false)
 
@@ -21,6 +21,12 @@ export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
         <div>
             <p className="text-sm mt-4">Card {currentCardIndex + 1} / {flashCards.length}</p>
             <p className="text-sm mb-2">{flashCards[currentCardIndex].input_lang} {flashCards[currentCardIndex].output_lang ? "- " + flashCards[currentCardIndex].output_lang : "Simplification"}</p>
+
+            <div className="my-4 group relative flex justify-center items-center text-darkBlue text-xs">
+                <span className="absolute transition-all duration-300 ease-in-out group-hover:opacity-0">Help?</span>
+                <span className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">Press card to flip it and see translation</span>
+            </div>
+
             {/* <div className="relative group flex justify-center items-center text-darkBlue">
                 <button onClick={handleSave} className="text-btn text-sm transition-all duration-300 ease-in-out group-hover:pr-2">Save as collection</button>
                 <span className="font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">+</span>
@@ -51,6 +57,11 @@ export const FlashCards = ({ flashCards }: { flashCards: FlashCardsType }) => {
                     <span>Next</span>
                     <span className="-rotate-90"><Icon type="down-chevron" /></span>
                 </button>}
+            </div>
+
+            <div className="mt-4 group flex justify-center items-center text-darkBlue">
+                <button className="text-btn transition-all duration-300 ease-in-out group-hover:pr-6" onClick={onBackToPractice}>Back to filters</button>
+                <span className="-rotate-90 opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out"><Icon type="down-chevron" /></span>
             </div>
         </div>
     )

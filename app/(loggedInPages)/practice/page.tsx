@@ -18,6 +18,10 @@ export default function Practice() {
 
     const searches: QueryDocumentSnapshot<SearchItemType, DocumentData>[] = useMemo(() => (snapshot ? snapshot.docs : []), [snapshot]);
 
+    const handleBackToPractice = () => {
+        setFlashCards(null)
+    };
+
     const handleStart = () => {
         if (searches) {
             const shuffled = searches.map(item => item.data()).sort(() => Math.random() - 0.5);
@@ -51,9 +55,10 @@ export default function Practice() {
 
             {!flashCards && searches.length > 0 && (
                 <>
-                    <p className="mt-6 text-start">Practice 10 random phrases from your search history.</p>
+                    <p className="font-sofiaPro text-lg mt-4">Practice with flash cards</p>
+                    <p className="mt-6 text-start">Get 10 random phrases from your search history.</p>
 
-                    <p className="mt-4 text-start">Or customize your own.</p>
+                    <p className="mt-4 text-start">Or customize your own deck.</p>
                     {searches && <CustomQuizBuilder searches={searches} onStartQuiz={setFlashCards} />}
 
                     <button className="btn-primary mx-auto mt-6" onClick={handleStart}>Start</button>
@@ -61,7 +66,7 @@ export default function Practice() {
             )}
 
             {flashCards && !loading && (
-                <FlashCards flashCards={flashCards} />
+                <FlashCards flashCards={flashCards} onBackToPractice={handleBackToPractice} />
             )}
         </main>
     );
