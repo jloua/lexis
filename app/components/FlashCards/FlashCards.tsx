@@ -12,11 +12,6 @@ export const FlashCards = ({ flashCards, onBackToPractice }: { flashCards: Flash
         setIsFlipped(!isFlipped);
     }
 
-    // const handleSave = () => {
-    //     // open module to name collection
-    //     // send to db as new collection
-    // }
-
     return (
         <div>
             <p className="text-sm mt-4">Card {currentCardIndex + 1} / {flashCards.length}</p>
@@ -26,11 +21,6 @@ export const FlashCards = ({ flashCards, onBackToPractice }: { flashCards: Flash
                 <span className="absolute transition-all duration-300 ease-in-out group-hover:opacity-0">Help?</span>
                 <span className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">Press card to flip it and see translation</span>
             </div>
-
-            {/* <div className="relative group flex justify-center items-center text-darkBlue">
-                <button onClick={handleSave} className="text-btn text-sm transition-all duration-300 ease-in-out group-hover:pr-2">Save as collection</button>
-                <span className="font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">+</span>
-            </div> */}
 
             <div
                 onClick={handleFlip}
