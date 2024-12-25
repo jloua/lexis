@@ -22,7 +22,7 @@ export const FlashCards = ({ flashCards, onBackToPractice }: { flashCards: Flash
             <p className="text-sm mt-4">Card {currentCardIndex + 1} / {flashCards.length}</p>
             <p className="text-sm mb-2">{flashCards[currentCardIndex].input_lang} {flashCards[currentCardIndex].output_lang ? "- " + flashCards[currentCardIndex].output_lang : "Simplification"}</p>
 
-            <div className="my-4 group relative flex justify-center items-center text-darkBlue text-xs">
+            <div className="mt-4 mb-8 group relative flex justify-center items-center text-darkBlue text-xs">
                 <span className="absolute transition-all duration-300 ease-in-out group-hover:opacity-0">Help?</span>
                 <span className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 ease-in-out">Press card to flip it and see translation</span>
             </div>

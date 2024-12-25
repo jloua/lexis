@@ -30,9 +30,16 @@ export async function POST(request: Request) {
         : type === "simplify"
         ? await simplifyText(input_language, input)
         : null;
-
+        
     if (!result) {
       throw new Error("Invalid type");
+    }
+
+    if (
+      typeof result === "string" &&
+      result.includes("GoogleGenerativeAI Error")
+    ) {
+      throw new Error(result);
     }
 
     return NextResponse.json({ message: result });
