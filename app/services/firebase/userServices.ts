@@ -26,7 +26,7 @@ const setTokenInCookie = async (token: string) => {
   }
 };
 
-const deleteTokenInCookie = async () => {
+export const deleteTokenInCookie = async () => {
   try {
     await axios.post("/api/auth/deleteCookie");
   } catch (error) {

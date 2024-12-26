@@ -7,7 +7,7 @@ import {
 } from "firebase/auth";
 import { AuthType, UserType } from "../types/user";
 import { auth } from "../services/firebase/config"
-import { loginWPassword, logoutFunc, signInWithGoogle, signupWithEmail, updateUserProfileFunc } from "@/app/services/firebase/userServices"
+import { deleteTokenInCookie, loginWPassword, logoutFunc, signInWithGoogle, signupWithEmail, updateUserProfileFunc } from "@/app/services/firebase/userServices"
 
 export const AuthContext = createContext<AuthType | null>(null);
 
@@ -66,7 +66,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
   }
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
 
       if (user) {
@@ -74,6 +74,7 @@ const AuthContextProvider: React.FC<PropsWithChildren> = ({ children }) => {
         setUserName(user.displayName);
         setUserPhotoUrl(user.photoURL);
       } else {
+        await deleteTokenInCookie();
         setUserEmail(null);
         setUserName(null);
         setUserPhotoUrl(null);

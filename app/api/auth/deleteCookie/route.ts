@@ -10,6 +10,7 @@ export async function POST() {
       secure: process.env.NODE_ENV === "production",
       path: "/",
       sameSite: "strict",
+      maxAge: 0,
     });
 
     return response;

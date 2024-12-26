@@ -34,9 +34,9 @@ export const DeleteUserButton = ({ userId }: { userId: string }) => {
 
             {isDeleteModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-                    <div className="bg-offWhite p-6 rounded-lg shadow-lg w-11/12 max-w-md">
+                    <div className="bg-offWhite p-6 rounded-lg shadow-lg w-11/12 max-w-md relative">
                         <button
-                            className="absolute top-[13.25rem] right-[1.75rem] md:right-[20.5rem] w-8 h-8 bg-light border border-dark rounded-full"
+                            className="absolute top-4 right-4  md:right-6 md:top-6 w-8 h-8 bg-light border border-dark rounded-full"
                             onClick={() => setIsDeleteModalOpen(false)}
                         >
                             &times;

@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         : type === "simplify"
         ? await simplifyText(input_language, input)
         : null;
-        
+
     if (!result) {
       throw new Error("Invalid type");
     }

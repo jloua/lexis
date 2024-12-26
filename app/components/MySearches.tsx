@@ -55,7 +55,7 @@ export const MySearches = ({ userId }: { userId: string }) => {
     return (
         <div className="mt-12 flex flex-col gap-4 text-start">
             {error && <span className="error">{error}</span>}
-            {loading && !docs && <span>Loading...</span>}
+            {loading && <span>Loading...</span>}
 
             {docs && docs.length > 0 && (
                 <>
